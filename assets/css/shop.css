@@ -1,0 +1,31 @@
+
+.shop-catalog { margin-top: 56px; }
+.shop-layout { display: grid; grid-template-columns: 224px minmax(0, 1fr); gap: 24px; align-items: start; }
+.shop-sidebar { display: grid; gap: 4px; padding: 16px; border: 1px solid #d4e5e7; border-radius: 14px; background: #fff; }
+.shop-sidebar h3 { margin: 0 0 8px; font-size: 16px; }
+.shop-sidebar button { text-align: left; padding: 9px 10px; border: 0; border-radius: 8px; background: transparent; color: #153e48; font: inherit; cursor: pointer; }
+.shop-sidebar button:hover, .shop-sidebar button[aria-pressed="true"] { background: #e6f5f6; color: #005763; }
+.shop-sidebar button[aria-pressed="true"] { font-weight: 800; }
+.shop-filters { margin: 0 0 16px; }
+.shop-filters label { display: grid; gap: 7px; font-weight: 700; }
+.shop-filters input, .shop-filters select { width: 100%; min-width: 0; border: 1px solid #b8d2d5; padding: 12px; background: white; color: #123d46; border-radius: 10px; font: inherit; }
+.shop-grid { margin: 20px 0; }
+.shop-card { min-width: 0; }
+.shop-card__image { display: grid; place-items: center; background: white; border-radius: 12px; }
+.shop-card__image img { width: 100%; height: auto; aspect-ratio: 1; object-fit: contain; }
+.shop-card__meta { margin: 10px 0 0; color: #456973; font-size: 13px; }
+.shop-card h3 { font-size: 17px; overflow-wrap: anywhere; }
+.shop-card__price { font-weight: 800; color: #005763; }
+.shop-catalog [hidden] { display: none; }
+.cosmetic-card { display: flex; flex-direction: column; align-items: flex-start; }
+.cosmetic-card .shop-card__image { width: 100%; margin-bottom: 12px; }
+.cosmetic-card .btn { margin-top: auto; }
+.cosmetic-card p { margin-bottom: 16px; }
+.shop-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (min-width: 901px) { .shop-sidebar { position: sticky; top: 24px; } }
+@media (max-width: 900px) {
+  .shop-layout { grid-template-columns: 1fr; }
+  .shop-sidebar { display: flex; flex-wrap: wrap; }
+  .shop-sidebar h3 { flex-basis: 100%; }
+}
+@media (max-width: 600px) { .shop-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; } .shop-card { padding: 12px; } }

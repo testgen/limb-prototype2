@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Концепция нового сайта LIMB — архитектура и маршруты</title>
+<link rel="icon" href="assets/favicon.svg?v=3" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+  /* Локальные компоненты страницы концепции — на токенах единой системы */
+  .tree { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 24px; }
+  .tree__item { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-m); padding: 14px 16px; }
+  .tree__item b { display: block; color: var(--ink); font-size: 14.5px; }
+  .tree__item span { font-size: 12.5px; color: var(--muted); }
+  .tree__item a { font-weight: 800; font-size: 14.5px; color: var(--ink); display: block; }
+  .tree__item a:hover { color: var(--accent); }
+  .tree__item--home { border-left: 4px solid var(--accent); }
+
+  .flow { counter-reset: fl; margin-top: 20px; }
+  .flow__step { display: grid; grid-template-columns: 46px 1fr; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .flow__step:last-child { border-bottom: 0; }
+  .flow__step::before {
+    counter-increment: fl; content: counter(fl, decimal-leading-zero);
+    font-weight: 800; color: var(--accent); background: #fff0e9;
+    border-radius: 10px; text-align: center; padding: 6px 0; height: fit-content;
+    font-variant-numeric: tabular-nums;
+  }
+  .flow__step b { color: var(--ink); }
+  .flow__step p { margin: 2px 0 0; font-size: 13.5px; color: var(--muted); }
+
+  .tablewrap { overflow-x: auto; margin-top: 22px; border: 1px solid var(--line); border-radius: var(--radius-m); background: var(--surface); }
+  .tablewrap table { border-collapse: collapse; width: 100%; min-width: 760px; font-size: 13.5px; }
+  .tablewrap th { text-align: left; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 12px 16px; border-bottom: 2px solid var(--line); }
+  .tablewrap td { padding: 12px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .tablewrap tr:last-child td { border-bottom: 0; }
+  .tablewrap td b { color: var(--ink); }
+  .tablewrap .cta { color: var(--accent); font-weight: 700; }
+
+  .swatches { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 22px; }
+  .swatch { border: 1px solid var(--line); border-radius: var(--radius-m); overflow: hidden; background: var(--surface); }
+  .swatch i { display: block; height: 54px; }
+  .swatch b { display: block; font-size: 13px; color: var(--ink); padding: 8px 12px 0; }
+  .swatch span { display: block; font-size: 12px; color: var(--muted); padding: 0 12px 10px; }
+
+  .openlist { list-style: none; margin: 20px 0 0; padding: 0; display: grid; gap: 10px; }
+  .openlist li { background: #fdf6e0; color: #8a6d1a; border: 1px dashed #e3c96f; border-radius: 10px; padding: 10px 14px; font-size: 13.5px; font-weight: 600; }
+  .openlist li::before { content: "✎ "; }
+
+  @media (max-width: 1020px) { .tree { grid-template-columns: repeat(2, 1fr); } .swatches { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 640px) { .tree, .swatches { grid-template-columns: 1fr; } }
+</style>
+<link rel="stylesheet" href="assets/css/redesign.css">
+<link rel="stylesheet" href="assets/css/photos.css"><link rel="stylesheet" href="assets/css/v3.css"><link rel="stylesheet" href="assets/css/v4.css"><link rel="stylesheet" href="assets/css/stories.css"><link rel="stylesheet" href="assets/css/v7.css"><link rel="stylesheet" href="assets/css/v9.css"></head>
+<body>
+<header id="app-header"></header>
+
+<section class="section section--muted">
+  <div class="container">
+    <span class="eyebrow">Визуальная концепция · к согласованию</span>
+    <h1>Архитектура нового сайта LIMB</h1>
+    <p class="lead">Структура страниц, пользовательские маршруты с CTA и визуальная система. Собрано строго по трём источникам: аудиту limborto.ru, файлу «Маршрут клиента» и контенту действующего сайта.</p>
+    <p>
+      <span class="badge-free" style="background:#fff;">Источник: аудит limborto.ru</span>
+      <span class="badge-free" style="background:#fff;">Источник: маршрут клиента (CJM)</span>
+      <span class="todo">Все пробелы в контенте помечены «требует наполнения» — ничего не выдумано</span>
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <span class="eyebrow">1 · Карта сайта</span>
+    <h2>Двенадцать страниц, одна шапка — кликабельны прямо отсюда</h2>
+    <div class="tree">
+      <div class="tree__item tree__item--home"><a href="index.html">Главная</a><span>оффер → этапы → доверие → истории → FAQ</span></div>
+      <div class="tree__item"><a href="legs.html">Протезы нижних конечностей</a><span>бедро / голень / стопа, MOBIS, квиз</span></div>
+      <div class="tree__item"><a href="hands.html">Протезы верхних конечностей</a><span>функция / внешний вид / замена</span></div>
+      <div class="tree__item"><a href="cosmetics.html">Косметические протезы пальцев</a><span>силиконовые фаланги, 6–14 дней</span></div>
+      <div class="tree__item"><a href="rehab.html">Реабилитация и школа ходьбы</a><span>этап пути пациента + лид-магнит</span></div>
+      <div class="tree__item"><a href="svo.html">Участникам СВО</a><span>весь путь под ключ, ветки до/первичное/повторное</span></div>
+      <div class="tree__item"><a href="before.html">Предстоит ампутация</a><span>снижение тревоги, консультация до операции</span></div>
+      <div class="tree__item"><a href="ipra.html">ИПРА и документы</a><span>как получить протез по 181-ФЗ: 3 пути</span></div>
+      <div class="tree__item"><a href="partners.html">Агентская программа</a><span>прозрачная механика для партнёров</span></div>
+      <div class="tree__item"><a href="blog.html">Блог</a><span>информационные статьи → лид-магниты</span></div>
+      <div class="tree__item"><a href="catalog.html">Каталог ТСР</a><span>каркас, требует решения по ассортименту</span></div>
+      <div class="tree__item"><a href="contacts.html">Контакты</a><span>Москва, Санкт-Петербург, Ростов-на-Дону</span></div>
+    </div>
+    <p style="margin-top:20px;">Меню по аудиту: Логотип → О компании ▾ → Протезирование ▾ (мегаменю, 3 колонки; реабилитация перенесена сюда) → Блог → Контакты → Каталог товаров → CTA «Получить консультацию».</p>
+  </div>
+</section>
+
+<section class="section section--muted">
+  <div class="container">
+    <span class="eyebrow">2 · Главная страница</span>
+    <h2>Роутер блоков — по аудиту</h2>
+    <div class="flow">
+      <div class="flow__step"><div><b>Первый экран</b><p>H1 + преимущества + единственный CTA + ссылка на отзывы. Видео-слот: сценарии активной жизни, акцент на возможностях человека, а не на изделии.</p></div></div>
+      <div class="flow__step"><div><b>Направления протезирования</b><p>4 карточки + CTA «Не знаете, какое решение подходит?»</p></div></div>
+      <div class="flow__step"><div><b>Путь пациента — 5 шагов</b><p>Компактная группировка существующих 8 этапов. Срок изготовления 2–6 недель.</p></div></div>
+      <div class="flow__step"><div><b>Кто стоит за компанией</b><p>Ибрагим Ибрагимов: основатель, техник-протезист, пользователь протеза бедра 17+ лет.</p></div></div>
+      <div class="flow__step"><div><b>О компании</b><p>Команда, партнёры, собственное КБ (коленный модуль Optimal Leg).</p></div></div>
+      <div class="flow__step"><div><b>Преимущества + CTA</b><p>Персональный менеджер, современные модули, бесплатно от государства, все регионы.</p></div></div>
+      <div class="flow__step"><div><b>Дополнительный оффер</b><p>Проживание для иногородних за счёт компании.</p></div></div>
+      <div class="flow__step"><div><b>Истории пациентов</b><p>Формат кейса: ситуация → путь → результат.</p></div></div>
+      <div class="flow__step"><div><b>FAQ</b><p>Только ключевые возражения; ответы ведут в разделы. Включён сценарий «обратиться за близкого».</p></div></div>
+      <div class="flow__step"><div><b>Финальная лид-форма</b><p>Имя, телефон, согласие, выбор «позвонить / написать».</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <span class="eyebrow">3 · Маршруты и конверсия</span>
+    <h2>Маршруты аудиторий → CTA</h2>
+    <p class="lead">CTA расставлены по файлу «Маршрут клиента»: после каждого смыслового блока. Чем холоднее пользователь, тем мягче CTA. Основной CTA всегда доступен в шапке.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Аудитория</th><th>Маршрут</th><th>Ключевые CTA</th><th>Финал</th></tr></thead>
+        <tbody>
+          <tr><td><b>Первичные</b></td><td>Главная / «Предстоит ампутация» → ноги или руки → этапы → кейсы</td><td class="cta">«Начать с консультации»</td><td>Консультация или лид-магнит</td></tr>
+          <tr><td><b>Повторные</b></td><td>Ноги / руки → ветка «есть проблема / замена»</td><td class="cta">«Подобрать новое решение»</td><td>Консультация по текущему протезу</td></tr>
+          <tr><td><b>Нижние конечности</b></td><td>Уровень ампутации → типы и MOBIS → бесплатное получение → этапы → реабилитация → кейсы</td><td class="cta">«Подобрать протез под мой уровень активности»</td><td>Квиз + заявка</td></tr>
+          <tr><td><b>Верхние конечности</b></td><td>Уровень + задача: функция / вид / замена → технологии → документы → кейсы</td><td class="cta">«Обсудить мою ситуацию со специалистом»</td><td>Разбор ситуации</td></tr>
+          <tr><td><b>СВО</b></td><td>Этап: до / первичное / повторное → маршрут под ключ → кейсы СВО</td><td class="cta">«Помощь с документами и протезированием»</td><td>Контакт + следующий шаг</td></tr>
+          <tr><td><b>Медпоказания</b></td><td>«Предстоит ампутация» → путь после операции → подготовка → истории</td><td class="cta">«Консультация до операции»</td><td>Ранний контакт с центром</td></tr>
+          <tr><td><b>ЛПВР (родственники)</b></td><td>Общие страницы + ответы «как обратиться за близкого»</td><td class="cta">«Консультация для близкого»</td><td>Звонок → приводит пациента</td></tr>
+          <tr><td><b>Информационные</b></td><td>Статья → прямой ответ → лид-магнит → страница услуги</td><td class="cta">«Получить гайд / памятку»</td><td>Прогрев → консультация</td></tr>
+          <tr><td><b>Агенты</b></td><td>«Агентская программа» → механика → условия</td><td class="cta">«Стать агентом»</td><td>Заявка + менеджер</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="section section--muted">
+  <div class="container">
+    <span class="eyebrow">4 · Визуальная система</span>
+    <h2>Единая айдентика вместо разрозненных страниц</h2>
+    <div class="swatches">
+      <div class="swatch"><i style="background:#0f3d6e"></i><b>Глубокий синий</b><span>бренд · доверие</span></div>
+      <div class="swatch"><i style="background:#ff6a3d"></i><b>Коралловый</b><span>CTA · движение</span></div>
+      <div class="swatch"><i style="background:#0e9f6e"></i><b>Зелёный</b><span>«бесплатно»</span></div>
+      <div class="swatch"><i style="background:#f6f7f9"></i><b>Светло-серый</b><span>фон секций</span></div>
+      <div class="swatch"><i style="background:#0b2c50"></i><b>Тёмно-синий</b><span>полоса и футер</span></div>
+    </div>
+    <div class="grid grid--2" style="margin-top:22px;">
+      <div class="card"><h3>Типографика</h3><p>Manrope — заголовки и текст: контрастные заголовки (800), читаемый текст 15–17 px, верхний регистр только в ярлыках разделов.</p></div>
+      <div class="card"><h3>Компоненты</h3><p>Один стиль кнопки без обводок; карточка направления; CTA-полоса; шаги; кейс-карточка; FAQ-аккордеон; форма из 3 полей; квиз. Один фавикон, одна шапка и футер на всех страницах и региональных версиях.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <span class="eyebrow">5 · Открытые вопросы</span>
+    <h2>Что нужно наполнить или утвердить</h2>
+    <ul class="openlist">
+      <li>Видеоряд первого экрана — нужны новые съёмки: ходьба, спорт, городская жизнь</li>
+      <li>Флагманские истории пациентов и кейсы участников СВО — структура готова, нужен контент</li>
+      <li>Цифры к уточнению: «1000+ пациентов», «от 2 недель от звонка до протеза», часы работы филиалов</li>
+      <li>Разделы «Наши сертификаты» и страница конструкторского бюро — контента в источниках нет</li>
+      <li>Каталог ТСР — расширять ли за пределы уходовой косметики (уже продаётся на WB/Ozon)</li>
+      <li>Лид-магниты (гайд, памятка по документам) — содержание утверждается с медкомандой</li>
+      <li>Условия агентской программы: вознаграждение и механика фиксации обращений</li>
+    </ul>
+  </div>
+</section>
+
+<footer id="app-footer"></footer>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/redesign.js"></script>
+</body>
+</html>
