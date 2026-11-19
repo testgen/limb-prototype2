@@ -28,6 +28,7 @@ function renderHeader() {
       </div>
       <a class="topbar__phone" href="tel:+78005514717">+7 (800) 551-47-17</a>
       <a class="v9-email" href="mailto:info@limbrussia.ru">info@limbrussia.ru</a><span class="topbar__hours">Часы работы: <span class="todo">уточнить</span></span>
+      ${document.body.dataset.page === 'index.html' ? '' : `<a class="partner-account-link" href="https://partner.limborto.ru/" target="_blank" rel="noopener">Кабинет партнёра <span aria-hidden="true">↗</span></a>`}
       ${MESSENGERS}
     </div>
   </div>
